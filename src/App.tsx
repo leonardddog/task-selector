@@ -6,6 +6,8 @@ import SurveyCanvas from './components/SurveyCanvas'
 import LivePollBuilder from './components/LivePollBuilder'
 import UxTaskCard from './components/UxTaskCard'
 import type { QuestionLayout, QuestionSet } from './components/questionOptions'
+import { Analytics } from '@vercel/analytics/react';
+
 import {
   DEFAULT_QUESTION_SET,
   DEFAULT_QUESTION_SET_PATH,
@@ -208,6 +210,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <Analytics />
       <WuAppHeader
         productName={`${questionSet === "surveys" ? "Surveys" : questionSet === "livepolls" ? "LivePolls" : questionSet === "journey" ? "Journey Management" : " QuestionPro UX"}`}
         categories={categories}
