@@ -1,3 +1,394 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --lab-panel-width: 300px;
+  --add-question-drawer-width: clamp(320px, calc(122.74px + 14.44vw), 400px);
+  --question-preview-width: clamp(640px, calc(48.23px + 43.32vw), 880px);
+}
+
+.lab-settings-panel {
+  --panel-bg: #303030;
+  --panel-surface: #3a3a3a;
+  --panel-surface-hover: #444444;
+  --panel-border: rgba(255, 255, 255, 0.14);
+  --panel-border-strong: rgba(255, 255, 255, 0.22);
+  --panel-text: #f2f2f2;
+  --panel-text-muted: #c4c4c4;
+  --panel-text-subtle: #9a9a9a;
+  --panel-accent: rgb(10, 134, 234);
+  --panel-accent-soft: rgba(10, 134, 234, 0.18);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  width: var(--lab-panel-width);
+  border-left: 1px solid var(--panel-border-strong);
+  background: var(--panel-bg);
+  color: var(--panel-text);
+  transform: translate(100%);
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+
+.lab-settings-panel.is-open {
+  transform: translate(0);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-settings-panel {
+    transition: none;
+  }
+}
+
+body {
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: padding-right 0.25s ease;
+}
+
+body.lab-settings-panel-open {
+  padding-right: var(--lab-panel-width);
+}
+
+@media (max-width: 900px) {
+  body.lab-settings-panel-open {
+    padding-right: 0;
+  }
+
+  .lab-settings-panel {
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.lab-settings-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 0;
+  gap: 8px;
+}
+
+.lab-settings-panel__title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--panel-text-muted);
+  margin: 0;
+}
+
+.lab-settings-panel__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lab-settings-panel__icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--panel-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.lab-settings-panel__icon-btn:hover {
+  background: var(--panel-accent-soft);
+  color: var(--panel-text);
+}
+
+.lab-settings-panel__controls {
+  padding: 4px 14px 14px;
+  border-bottom: 1px solid var(--panel-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.lab-settings-panel__control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-settings-panel__control-label {
+  font-size: 12px;
+  color: var(--panel-text-muted);
+}
+
+.lab-settings-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.lab-settings-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--panel-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.lab-settings-radio:hover {
+  background: var(--panel-surface-hover);
+  color: var(--panel-text);
+}
+
+.lab-settings-radio.is-active {
+  background: var(--panel-accent-soft);
+  color: var(--panel-text);
+}
+
+.lab-settings-radio__input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--panel-accent);
+  cursor: pointer;
+}
+
+.lab-settings-radio:has(.lab-settings-radio__input:focus-visible) {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: 1px;
+}
+
+.lab-settings-panel__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.lab-settings-panel__body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lab-settings-panel__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+}
+
+.lab-settings-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lab-settings-panel__section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--panel-text-subtle);
+  margin: 0 0 4px;
+}
+
+.lab-settings-panel__placeholder {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-border);
+  color: var(--panel-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.lab-settings-toggle {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  border-radius: 999px;
+  background: #5a5a5a;
+  border: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+  padding: 0;
+}
+
+.lab-settings-toggle::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 3px;
+  left: 3px;
+  background: #fff;
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+  transition: transform 0.2s ease;
+}
+
+.lab-settings-toggle:checked {
+  background: var(--panel-accent);
+}
+
+.lab-settings-toggle:checked::after {
+  transform: translate(14px);
+}
+
+.lab-settings-segment {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-border);
+}
+
+.lab-settings-segment__option {
+  border: none;
+  background: transparent;
+  color: var(--panel-text-muted);
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.lab-settings-segment__option:hover {
+  color: var(--panel-text);
+}
+
+.lab-settings-segment__option.is-active {
+  background: var(--panel-accent);
+  color: #fff;
+}
+
+.lab-settings-segment__option:focus-visible {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: 1px;
+}
+
+.lab-settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lab-settings-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--panel-surface);
+  border: 1px solid var(--panel-border);
+  color: var(--panel-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lab-settings-item:hover {
+  background: var(--panel-surface-hover);
+  border-color: var(--panel-border-strong);
+}
+
+.add-question-grid:has(.add-question-card:hover) .add-question-card:not(:hover) {
+  opacity: 0.7;
+}
+
+.survey-question-grid:has(.survey-question-item:hover) .survey-question-item:not(:hover) {
+  opacity: 0.7;
+}
+
+.add-question-drawer {
+  width: var(--add-question-drawer-width);
+}
+
+.add-question-drawer--survey,
+.add-question-drawer--journey {
+  width: min(clamp(504px, calc(306.74px + 14.44vw), 584px), calc(100vw - 16px));
+}
+
+.question-preview {
+  width: var(--question-preview-width);
+  aspect-ratio: 4 / 3;
+  max-width: 100%;
+}
+
+.survey-question-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d4 #f1f1f1;
+}
+
+.survey-question-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.survey-question-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.survey-question-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 999px;
+}
+
+.journey-map {
+  width: 100%;
+  min-width: 720px;
+}
+
+.journey-grid {
+  display: grid;
+  grid-template-columns: clamp(120px, 13%, 174px) repeat(4, minmax(0, 1fr));
+}
+
+.journey-lane-header {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+}
+
+.journey-canvas-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d4 #f1f1f1;
+}
+
+.journey-canvas-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.journey-canvas-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.journey-canvas-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 999px;
+}
